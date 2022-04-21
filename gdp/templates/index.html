@@ -1,12 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>dupa</p>
-</body>
-</html>
+{% extends 'base.html' %} 
+
+{% block content %}
+<p class="lead">GDP by country</p>
+<div class="row">
+    <div id="bar-chart" class="col-10">
+        {% include 'partials/chart.html' %}
+    </div>
+    <div class="col-2">
+        <form >
+            <select name="year" 
+                    id="select-year" 
+                    class="custom-select" 
+                    autocomplete="off"
+                    hx-get="{% url 'index' %}"
+                    hx-target="#bar-chart">
+                {% for year in years %}
+                <option value="{{year}}">{{year}}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
