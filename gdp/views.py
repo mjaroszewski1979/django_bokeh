@@ -1,7 +1,7 @@
 import math
 from django.db.models import Max, Min
 from django.shortcuts import render
-from bokeh.models import ColumnDataSource, NumeralTickFormatter
+from bokeh.models import ColumnDataSource, NumeralTickFormatter, HoverTool
 from bokeh.embed import components
 from bokeh.plotting import figure
 from . models import GDP
@@ -21,11 +21,18 @@ def index(request):
     fig.yaxis[0].formatter = NumeralTickFormatter(format='$0.0a')
     fig.xaxis.major_label_orientation = math.pi / 4
     fig.vbar(source=cds, x='country_names', top='country_gdps', width=0.8 )
+    tooltips = [
+        ('Country', '@country_names'),
+        ('GDP', '@country_gdps{,}')
+    ]
+    fig.add_tools(HoverTool(tooltips=tooltips))
     script, div = components(fig)
     context = {
         'script': script,
         'div': div,
-        'years': range(min_year, max_year + 1)
+        'years': range(min_year, max_year + 1),
+        'count': count,
+        'year_selected': year
 
     }
     if request.htmx:
